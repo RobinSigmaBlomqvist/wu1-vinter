@@ -1,7 +1,7 @@
 /* Om du vill ändra snöfärgen */
 const color = [255, 255, 255];
 /* justera hur snabbt snön faller */
-const speed = 5;
+const speed = 10000;
 
 /* Ändra här nedanför på egen risk */
 
@@ -9,52 +9,41 @@ const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const canvas = document.createElement("canvas");
-canvas.setAttribute("id", "bg");
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const ctx = canvas.getContext("2d");
-const pi2 = 2 * Math.PI;
-
-const bodyElement = document.querySelector("body");
-bodyElement.appendChild(canvas);
-
 let particles = [];
 
-window.onresize = () => {
+function init() {
+  particles = [];
+  for (let i = 0; i < 50; i++) {
+    particles.push(new Particle(canvas));
+  }
+  console.log('Particles created:', particles.length);
+  console.log('Image loaded:', particleImage !== null);
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  particles.forEach(p => {
+    p.update();
+    p.draw(ctx);
+  });
+  
+  requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-};
-
-window.onscroll = () => {
-  canvas.setAttribute("style", `top: ${window.scrollY}px`);
-};
-
-const spawnParticles = (amount) => {
-  for (let i = 0; i < amount; i++) {
-    particles.push(new Particle(randomInt(0, canvas.width), 0, color));
-  }
-};
-
-const step = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  particles.forEach((particle) => {
-    particle.draw();
-    particle.update();
-  });
-
-  particles = particles.filter((particle) => !particle.toDelete);
-
-  if (particles.length < 400) {
-    spawnParticles(3);
-  }
-
-  window.requestAnimationFrame(step);
-};
-
-window.requestAnimationFrame(step);
+});
 
 /* Ladda in text från URL-parametrar */
 const getQueryParams = () => {
