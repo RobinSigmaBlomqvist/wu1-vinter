@@ -1,7 +1,7 @@
 /* Om du vill ändra snöfärgen */
 const color = [255, 255, 255];
 /* justera hur snabbt snön faller */
-const speed = 10000;
+const speed = 5000;
 
 /* Ändra här nedanför på egen risk */
 
@@ -45,7 +45,6 @@ window.addEventListener('resize', () => {
   canvas.height = window.innerHeight;
 });
 
-/* Ladda in text från URL-parametrar */
 const getQueryParams = () => {
   const params = new URLSearchParams(window.location.search);
   const title = params.get('title');
